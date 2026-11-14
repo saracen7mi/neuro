@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+    <meta charset="UTF-8">
+    
+    <!-- Google tag (gtag.js) - OVDJE ZAMIJENI G-XXXXXXXXXX SA SVOJIM KODOM -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NeuroReset — Audio-Vizualni Biofeedback</title>
+    <style>
+        :root {
+            --bg-dark: #070b14;
+            --card-bg: rgba(15, 23, 42, 0.82);
+            --border-subtle: rgba(148, 163, 184, 0.15);
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --accent-teal: #2dd4bf;
+            --accent-cyan: #06b6d4;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+            padding: 16px;
+        }
+
+        #ambient-pulse {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 50% 45%, rgba(45, 212, 191, 0.18) 0%, rgba(15, 23, 42, 0) 70%);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.92;
+            will-change: opacity;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        header {
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 1.45rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #2dd4bf, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+        }
+
+        .section-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
+
+        .grid-5 {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+        }
+
+        .option-btn {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-main);
+            padding: 10px 6px;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+            font-size: 0.82rem;
+        }
+
+        .option-btn small {
+            display: block;
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .option-btn.active {
+            background: rgba(45, 212, 191, 0.16);
+            border-color: var(--accent-teal);
+            color: #fff;
+            box-shadow: 0 0 12px rgba(45, 212, 191, 0.2);
+        }
+
+        select {
+            width: 100%;
+            background: rgba(30, 41, 59, 0.85);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-main);
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 0.88rem;
+            outline: none;
+        }
+
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 0.85rem;
+        }
+
+        .toggle-row span small {
+            display: block;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-teal);
+            cursor: pointer;
+        }
+
+        .primary-btn {
+            width: 100%;
+            padding: 15px;
+            border-radius: 14px;
+            border: none;
+            background: linear-gradient(135deg, #0d9488, #0284c7);
+            color: white;
+            font-size: 0.98rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(13, 148, 136, 0.35);
+            transition: transform 0.15s ease;
+        }
+
+        .primary-btn:active {
+            transform: scale(0.98);
+        }
+
+        .secondary-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+            background: rgba(30, 41, 59, 0.7);
+            color: var(--text-main);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .info-box {
+            background: rgba(30, 41, 59, 0.45);
+            border: 1px solid rgba(45, 212, 191, 0.25);
+            border-radius: 14px;
+            padding: 12px;
+            font-size: 0.82rem;
+            line-height: 1.45;
+            color: #cbd5e1;
+        }
+
+        .info-box h3 {
+            color: var(--accent-teal);
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .info-box ul {
+            padding-left: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        /* Aktivna sesija */
+        #session-view {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 22px;
+        }
+
+        .timer-badge {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid var(--border-subtle);
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 0.95rem;
+            font-variant-numeric: tabular-nums;
+            color: var(--accent-teal);
+            font-weight: 600;
+        }
+
+        .visualizer-wrapper {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 0;
+        }
+
+        .outer-ring {
+            position: absolute;
+            width: 230px;
+            height: 230px;
+            border-radius: 50%;
+            border: 1px dashed rgba(45, 212, 191, 0.28);
+        }
+
+        #breath-orb {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #5eead4, #0f766e 75%, #115e59);
+            box-shadow: 0 0 45px rgba(45, 212, 191, 0.45);
+            will-change: transform;
+            transform: scale(1);
+        }
+
+        .instruction-box {
+            min-height: 55px;
+        }
+
+        #breath-phase-text {
+            font-size: 1.45rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #fff;
+        }
+
+        #breath-sub-text {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Rezultat */
+        #result-view {
+            display: none;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .status-banner {
+            background: linear-gradient(135deg, rgba(13, 148, 136, 0.22), rgba(2, 132, 199, 0.22));
+            border: 1px solid rgba(45, 212, 191, 0.4);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .status-banner h2 {
+            font-size: 1.15rem;
+            color: #5eead4;
+            margin-bottom: 5px;
+        }
+
+        .status-banner p {
+            font-size: 0.86rem;
+            line-height: 1.45;
+            color: #e2e8f0;
+        }
+
+        .effect-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        .effect-list li {
+            background: rgba(15, 23, 42, 0.65);
+            border-left: 3px solid var(--accent-teal);
+            padding: 10px 12px;
+            border-radius: 0 12px 12px 0;
+            font-size: 0.84rem;
+            line-height: 1.4;
+        }
+
+        .effect-list li strong {
+            display: block;
+            color: #fff;
+            margin-bottom: 2px;
+            font-size: 0.88rem;
+        }
+    </style>
+</head>
+<body>
+
+<div id="ambient-pulse"></div>
+
+<div class="container">
+    <header>
+        <h1>NeuroReset 0.1 Hz</h1>
+        <p>Audio-vizualna regulacija i biološki reset</p>
+    </header>
+
+    <!-- 1. POSTAVKE I UPUTSTVO -->
+    <div id="setup-view" class="card" style="display: flex; flex-direction: column; gap: 14px;">
+        
+        <!-- Uputstvo za upotrebu -->
+        <div class="info-box">
+            <h3>🧘‍♂️ Uputstvo za idealan položaj</h3>
+            <ul>
+                <li><strong>Sjedi ili lezi:</strong> Stopala ravno na podu ili lezi na leđa. Opusti ramena i vilicu.</li>
+                <li><strong>Glava i vrat:</strong> Neutralan položaj da zrak nesmetano prolazi kroz nos.</li>
+                <li><strong>Slušalice:</strong> Stavi slušalice u uši za puni stereo binauralni efekt.</li>
+            </ul>
+        </div>
+
+        <!-- Brzi Check-in stresa prije sesije -->
+        <div>
+            <div class="section-title">0. Trenutni nivo napetosti (1 = Miran, 5 = Jak stres)</div>
+            <div class="grid-5">
+                <button class="option-btn" data-stress="1" onclick="selectStress(1, this)">1<small>Miran</small></button>
+                <button class="option-btn" data-stress="2" onclick="selectStress(2, this)">2<small>Blago</small></button>
+                <button class="option-btn active" data-stress="3" onclick="selectStress(3, this)">3<small>Srednje</small></button>
+                <button class="option-btn" data-stress="4" onclick="selectStress(4, this)">4<small>Napeto</small></button>
+                <button class="option-btn" data-stress="5" onclick="selectStress(5, this)">5<small>Jak stres</small></button>
+            </div>
+        </div>
+
+        <div>
+            <div class="section-title">1. Protokol disanja (0.1 Hz ritam)</div>
+            <div class="grid-2">
+                <button class="option-btn active" data-protocol="coherent" onclick="selectProtocol('coherent', this)">
+                    Koherentno
+                    <small>5s udah / 5s izdah</small>
+                </button>
+                <button class="option-btn" data-protocol="sigh" onclick="selectProtocol('sigh', this)">
+                    Fiziološki uzdah
+                    <small>2.5s + 1s udah / 6.5s izdah</small>
+                </button>
+            </div>
+        </div>
+
+        <div>
+            <div class="section-title">2. Ciljani moždani valovi</div>
+            <div class="grid-3">
+                <button class="option-btn active" data-wave="alpha" onclick="selectWave('alpha', this)">
+                    Alfa (8 Hz)
+                    <small>Smiren fokus</small>
+                </button>
+                <button class="option-btn" data-wave="theta" onclick="selectWave('theta', this)">
+                    Theta (6 Hz)
+                    <small>Duboki reset</small>
+                </button>
+                <button class="option-btn" data-wave="delta" onclick="selectWave('delta', this)">
+                    Delta (3 Hz)
+                    <small>Gašenje napetosti</small>
+                </button>
+            </div>
+        </div>
+
+        <div>
+            <div class="section-title">3. Osnovni ton (Carrier frekvencija)</div>
+            <select id="carrier-select">
+                <option value="200">200 Hz — Topli ton (Preporučeno za BT slušalice)</option>
+                <option value="432" selected>432 Hz — Prirodni balans i ravnoteža</option>
+                <option value="528">528 Hz — Solfeggio regeneracija</option>
+                <option value="174">174 Hz — Niska frekvencija za opuštanje</option>
+            </select>
+        </div>
+
+        <div>
+            <div class="section-title">4. Trajanje sesije</div>
+            <div class="grid-3" style="margin-bottom: 8px;">
+                <button class="option-btn" data-duration="60" onclick="selectDuration(60, this)">1 min<small>Brzi prekid</small></button>
+                <button class="option-btn active" data-duration="180" onclick="selectDuration(180, this)">3 min<small>Puni reset</small></button>
+                <button class="option-btn" data-duration="300" onclick="selectDuration(300, this)">5 min<small>Duboka obnova</small></button>
+            </div>
+
+            <div class="toggle-row">
+                <span>Zvučni šum disanja <small>Prati ritam (za rad zatvorenih očiju)</small></span>
+                <input type="checkbox" id="breath-audio-toggle" checked>
+            </div>
+
+            <div class="toggle-row">
+                <span>Vizualna pulsacija pozadine <small>Sigurna Alfa modulacija</small></span>
+                <input type="checkbox" id="visual-pulse-toggle" checked>
+            </div>
+        </div>
+
+        <button class="primary-btn" onclick="startSession()">POKRENI RESET SESIJU</button>
+    </div>
+
+    <!-- 2. AKTIVNA SESIJA -->
+    <div id="session-view" class="card">
+        <div class="timer-badge" id="timer-display">03:00</div>
+
+        <div class="visualizer-wrapper">
+            <div class="outer-ring"></div>
+            <div id="breath-orb"></div>
+        </div>
+
+        <div class="instruction-box">
+            <div id="breath-phase-text">PRIPREMI SE</div>
+            <div id="breath-sub-text">Gledaj u krug ili zatvori oči i prati zvuk</div>
+        </div>
+
+        <button class="secondary-btn" onclick="stopSession(false)">Prekini sesiju</button>
+    </div>
+
+    <!-- 3. REZULTAT NAKON SESIJE -->
+    <div id="result-view" class="card">
+        <div class="status-banner">
+            <h2>Reset završen — Sustav je u balansu</h2>
+            <p id="result-summary-intro"></p>
+        </div>
+
+        <div>
+            <div class="section-title">Kako se osjećaš sada nakon sesije?</div>
+            <div class="grid-5" id="post-stress-grid">
+                <button class="option-btn" onclick="recordPostStress(1, this)">1<small>Miran</small></button>
+                <button class="option-btn" onclick="recordPostStress(2, this)">2<small>Opušten</small></button>
+                <button class="option-btn" onclick="recordPostStress(3, this)">3<small>Bolje</small></button>
+                <button class="option-btn" onclick="recordPostStress(4, this)">4<small>Napeto</small></button>
+                <button class="option-btn" onclick="recordPostStress(5, this)">5<small>Isto</small></button>
+            </div>
+            <p id="stress-comparison-msg" style="font-size: 0.82rem; color: #5eead4; margin-top: 8px; text-align: center; font-weight: 600;"></p>
+        </div>
+
+        <div>
+            <div class="section-title">Što su ove frekvencije upravo uradile tvom organizmu:</div>
+            <ul class="effect-list" id="result-effects-list"></ul>
+        </div>
+
+        <button class="primary-btn" onclick="resetToHome()">Nova sesija</button>
+    </div>
+</div>
+
+<script>
+    let config = {
+        preStress: 3,
+        protocol: 'coherent',
+        wave: 'alpha',
+        carrier: 432,
+        duration: 180
+    };
+
+    const waveDetails = {
+        alpha: {
+            hz: 8,
+            name: "Alfa valovi (8 Hz)",
+            brainEffect: "Spustio si mozak iz stresnog Beta stanja u opuštenu, ali budnu Alfa zonu. Osjećaj bistrine bez unutarnjeg grča."
+        },
+        theta: {
+            hz: 6,
+            name: "Theta valovi (6 Hz)",
+            brainEffect: "Uveo si moždanu koru u duboku Theta relaksaciju. Mentalni šum i pretjerano razmišljanje su utišani."
+        },
+        delta: {
+            hz: 3,
+            name: "Delta valovi (3 Hz)",
+            brainEffect: "Aktivirao si regenerativne frekvencije koje gase akutnu napetost i fizički umor u mišićima."
+        }
+    };
+
+    const carrierDetails = {
+        174: "Osnovni ton od 174 Hz djeluje kao prirodni smirivač i daje tijelu osjećaj fizičke stabilnosti.",
+        200: "Topli osnovni ton od 200 Hz stvara stabilnu zvučnu izolaciju od vanjskih smetnji.",
+        432: "Frekvencija od 432 Hz smanjuje mentalnu napetost i ostavlja osjećaj ravnoteže.",
+        528: "Frekvencija od 528 Hz potiče relaksaciju, smanjuje kortizol i podiže vitalnost."
+    };
+
+    let audioCtx = null;
+    let oscLeft = null;
+    let oscRight = null;
+    let masterGain = null;
+    let noiseNode = null;
+    let noiseFilter = null;
+    let noiseGain = null;
+
+    let isRunning = false;
+    let sessionStartTime = 0;
+    let animFrameId = null;
+
+    function selectStress(val, btn) {
+        config.preStress = val;
+        document.querySelectorAll('[data-stress]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    function selectProtocol(val, btn) {
+        config.protocol = val;
+        document.querySelectorAll('[data-protocol]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    function selectWave(val, btn) {
+        config.wave = val;
+        document.querySelectorAll('[data-wave]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    function selectDuration(sec, btn) {
+        config.duration = sec;
+        document.querySelectorAll('[data-duration]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    function initAudioEngine() {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContextClass();
+
+        config.carrier = parseFloat(document.getElementById('carrier-select').value);
+        const beatFreq = waveDetails[config.wave].hz;
+
+        masterGain = audioCtx.createGain();
+        masterGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+        masterGain.gain.exponentialRampToValueAtTime(0.28, audioCtx.currentTime + 1.5);
+        masterGain.connect(audioCtx.destination);
+
+        oscLeft = audioCtx.createOscillator();
+        const panLeft = audioCtx.createStereoPanner();
+        oscLeft.type = 'sine';
+        oscLeft.frequency.setValueAtTime(config.carrier, audioCtx.currentTime);
+        panLeft.pan.setValueAtTime(-1, audioCtx.currentTime);
+        oscLeft.connect(panLeft);
+        panLeft.connect(masterGain);
+
+        oscRight = audioCtx.createOscillator();
+        const panRight = audioCtx.createStereoPanner();
+        oscRight.type = 'sine';
+        oscRight.frequency.setValueAtTime(config.carrier + beatFreq, audioCtx.currentTime);
+        panRight.pan.setValueAtTime(1, audioCtx.currentTime);
+        oscRight.connect(panRight);
+        panRight.connect(masterGain);
+
+        oscLeft.start();
+        oscRight.start();
+
+        if (document.getElementById('breath-audio-toggle').checked) {
+            const bufferSize = audioCtx.sampleRate * 4;
+            const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+            let lastOut = 0.0;
+            for (let i = 0; i < bufferSize; i++) {
+                const white = Math.random() * 2 - 1;
+                output[i] = (lastOut + (0.02 * white)) / 1.02;
+                lastOut = output[i];
+                output[i] *= 3.2;
+            }
+
+            noiseNode = audioCtx.createBufferSource();
+            noiseNode.buffer = noiseBuffer;
+            noiseNode.loop = true;
+
+            noiseFilter = audioCtx.createBiquadFilter();
+            noiseFilter.type = 'lowpass';
+            noiseFilter.frequency.setValueAtTime(220, audioCtx.currentTime);
+
+            noiseGain = audioCtx.createGain();
+            noiseGain.gain.setValueAtTime(0.02, audioCtx.currentTime);
+
+            noiseNode.connect(noiseFilter);
+            noiseFilter.connect(noiseGain);
+            noiseGain.connect(masterGain);
+            noiseNode.start();
+        }
+    }
+
+    function stopAudioEngine() {
+        if (!audioCtx) return;
+        try {
+            const now = audioCtx.currentTime;
+            masterGain.gain.setValueAtTime(masterGain.gain.value, now);
+            masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
+            setTimeout(() => {
+                if (oscLeft) oscLeft.stop();
+                if (oscRight) oscRight.stop();
+                if (noiseNode) noiseNode.stop();
+                if (audioCtx) audioCtx.close();
+                audioCtx = null;
+            }, 650);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    function startSession() {
+        // Slanje događaja u Google Analytics kad netko pokrene sesiju
+        if (typeof gtag === 'function') {
+            gtag('event', 'session_start', {
+                'protocol': config.protocol,
+                'wave': config.wave,
+                'carrier': config.carrier,
+                'duration_sec': config.duration
+            });
+        }
+
+        document.getElementById('setup-view').style.display = 'none';
+        document.getElementById('result-view').style.display = 'none';
+        document.getElementById('session-view').style.display = 'flex';
+
+        initAudioEngine();
+        isRunning = true;
+        sessionStartTime = performance.now();
+        requestAnimationFrame(updateLoop);
+    }
+
+    function updateLoop(now) {
+        if (!isRunning) return;
+
+        const elapsedSec = (now - sessionStartTime) / 1000;
+        const remainingSec = Math.max(0, config.duration - elapsedSec);
+
+        const mins = Math.floor(remainingSec / 60);
+        const secs = Math.floor(remainingSec % 60);
+        document.getElementById('timer-display').textContent =
+            `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+        if (remainingSec <= 0) {
+            stopSession(true);
+            return;
+        }
+
+        const cyclePos = elapsedSec % 10;
+        let breathLevel = 0;
+        let phaseTitle = "";
+        let phaseSub = "";
+
+        if (config.protocol === 'coherent') {
+            if (cyclePos < 5) {
+                const t = cyclePos / 5;
+                breathLevel = 0.5 - 0.5 * Math.cos(Math.PI * t);
+                phaseTitle = "UDAH KROZ NOS";
+                phaseSub = "Polako i duboko širi pluća (5s)";
+            } else {
+                const t = (cyclePos - 5) / 5;
+                breathLevel = 0.5 + 0.5 * Math.cos(Math.PI * t);
+                phaseTitle = "LAGANI IZDAH";
+                phaseSub = "Opusti ramena i ispusti sav zrak (5s)";
+            }
+        } else {
+            if (cyclePos < 2.5) {
+                const t = cyclePos / 2.5;
+                breathLevel = 0.78 * (0.5 - 0.5 * Math.cos(Math.PI * t));
+                phaseTitle = "DUBOKI UDAH";
+                phaseSub = "Napuni pluća kroz nos";
+            } else if (cyclePos < 3.5) {
+                const t = (cyclePos - 2.5) / 1.0;
+                breathLevel = 0.78 + 0.22 * (0.5 - 0.5 * Math.cos(Math.PI * t));
+                phaseTitle = "KRATKI DOPUNSKI UDAH";
+                phaseSub = "Povuci još malo zraka do vrha!";
+            } else {
+                const t = (cyclePos - 3.5) / 6.5;
+                breathLevel = 0.5 + 0.5 * Math.cos(Math.PI * t);
+                phaseTitle = "DUGI, SPORI IZDAH";
+                phaseSub = "Polako ispuštaj zrak kroz usta (6.5s)";
+            }
+        }
+
+        const orb = document.getElementById('breath-orb');
+        const scale = 0.85 + (breathLevel * 0.9);
+        orb.style.transform = `scale(${scale.toFixed(4)})`;
+
+        document.getElementById('breath-phase-text').textContent = phaseTitle;
+        document.getElementById('breath-sub-text').textContent = phaseSub;
+
+        if (noiseGain && noiseFilter && audioCtx) {
+            const targetGain = 0.03 + (breathLevel * 0.22);
+            const targetFreq = 180 + (breathLevel * 420);
+            noiseGain.gain.setTargetAtTime(targetGain, audioCtx.currentTime, 0.05);
+            noiseFilter.frequency.setTargetAtTime(targetFreq, audioCtx.currentTime, 0.05);
+        }
+
+        const ambient = document.getElementById('ambient-pulse');
+        if (document.getElementById('visual-pulse-toggle').checked) {
+            const beatHz = waveDetails[config.wave].hz;
+            const pulse = 0.94 + 0.06 * Math.sin(2 * Math.PI * beatHz * elapsedSec);
+            ambient.style.opacity = pulse.toFixed(3);
+        } else {
+            ambient.style.opacity = "0.9";
+        }
+
+        animFrameId = requestAnimationFrame(updateLoop);
+    }
+
+    function stopSession(completed) {
+        isRunning = false;
+        if (animFrameId) cancelAnimationFrame(animFrameId);
+        stopAudioEngine();
+        document.getElementById('ambient-pulse').style.opacity = "0.92";
+
+        if (completed) {
+            if (typeof gtag === 'function') {
+                gtag('event', 'session_completed', {
+                    'duration_sec': config.duration
+                });
+            }
+            showResultScreen();
+        } else {
+            resetToHome();
+        }
+    }
+
+    function showResultScreen() {
+        document.getElementById('session-view').style.display = 'none';
+        document.getElementById('result-view').style.display = 'flex';
+        document.getElementById('stress-comparison-msg').textContent = "";
+        document.querySelectorAll('#post-stress-grid .option-btn').forEach(b => b.classList.remove('active'));
+
+        const waveInfo = waveDetails[config.wave];
+        const minutesDone = Math.round(config.duration / 60);
+        const protocolName = config.protocol === 'coherent'
+            ? "Koherentno disanje (0.1 Hz)"
+            : "Fiziološki uzdah (0.1 Hz)";
+
+        document.getElementById('result-summary-intro').textContent =
+            `Odradio si ${minutesDone} min protokola: ${protocolName} + ${waveInfo.name} na bazi od ${config.carrier} Hz. Živčani sustav je izašao iz stanja stresa.`;
+
+        const list = document.getElementById('result-effects-list');
+        list.innerHTML = `
+            <li>
+                <strong>1. Moždani valovi — ${waveInfo.name}</strong>
+                ${waveInfo.brainEffect}
+            </li>
+            <li>
+                <strong>2. Živac Vagus i srčani ritam (0.1 Hz)</strong>
+                Ritmom od 6 ciklusa u minuti aktiviran je parasimpatikus. Usklađeni su rad srca i disanje (HRV), čime je prekinuto lučenje kortizola.
+            </li>
+            <li>
+                <strong>3. Zvučna baza (${config.carrier} Hz)</strong>
+                ${carrierDetails[config.carrier]}
+            </li>
+        `;
+    }
+
+    function recordPostStress(postVal, btn) {
+        document.querySelectorAll('#post-stress-grid .option-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const diff = config.preStress - postVal;
+        const msgEl = document.getElementById('stress-comparison-msg');
+
+        if (diff > 0) {
+            const pct = Math.round((diff / config.preStress) * 100);
+            msgEl.textContent = `Odlično! Napetost ti je pala s ${config.preStress}/5 na ${postVal}/5 (−${pct}%).`;
+        } else if (diff === 0) {
+            msgEl.textContent = `Stanje je stabilno (${postVal}/5). Za dublji efekt probaj Theta (6 Hz) na 5 minuta.`;
+        } else {
+            msgEl.textContent = `Zabilježeno (${postVal}/5). Opusti ramena i probaj Fiziološki uzdah.`;
+        }
+    }
+
+    function resetToHome() {
+        document.getElementById('result-view').style.display = 'none';
+        document.getElementById('session-view').style.display = 'none';
+        document.getElementById('setup-view').style.display = 'flex';
+    }
+</script>
+
+</body>
+</html>
