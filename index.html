@@ -15,12 +15,12 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
        
-    <title>NeuroReset — Audio-Vizualni Biofeedback</title>
+    <title>NeuroReset — Audio-Vizualni Biofeedback & EMDR</title>
 
     <!-- OPEN GRAPH ZA VIBER I DRUŠTVENE MREŽE -->
     <meta property="og:title" content="NeuroReset — Brzi biološki reset i regulacija stresa">
-    <meta property="og:description" content="Audio-vizualni biofeedback alat za spuštanje stresa, rezonantno disanje (0.1 Hz) i balansiranje nervnog sistema.">
-   <meta property="og:image" content="https://i.ibb.co/qMkhGpMp/Screenshot-2026-11-14-at-18-43-11.png">
+    <meta property="og:description" content="Audio-vizualni biofeedback alat za spuštanje stresa, rezonantno disanje (0.1 Hz), binauralne valove i EMDR bilateralnu stimulaciju.">
+    <meta property="og:image" content="https://i.ibb.co/qMkhGpMp/Screenshot-2026-11-14-at-18-43-11.png">
     <meta property="og:image:type" content="image/png">
     <meta property="og:type" content="website">
     
@@ -74,6 +74,30 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
+        }
+
+        .lang-bar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 6px;
+        }
+
+        .lang-btn {
+            background: rgba(15, 23, 42, 0.85);
+            color: var(--text-muted);
+            border: 1px solid var(--border-subtle);
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .lang-btn.active {
+            background: rgba(45, 212, 191, 0.2);
+            border-color: var(--accent-teal);
+            color: #fff;
         }
 
         header {
@@ -155,6 +179,12 @@
             border-color: var(--accent-teal);
             color: #fff;
             box-shadow: 0 0 12px rgba(45, 212, 191, 0.2);
+        }
+
+        .option-btn.emdr-btn.active {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: #38bdf8;
+            box-shadow: 0 0 14px rgba(56, 189, 248, 0.25);
         }
 
         select {
@@ -267,12 +297,13 @@
 
         .visualizer-wrapper {
             position: relative;
-            width: 250px;
+            width: 100%;
             height: 250px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 10px 0;
+            overflow: hidden;
         }
 
         .outer-ring {
@@ -281,6 +312,15 @@
             height: 230px;
             border-radius: 50%;
             border: 1px dashed rgba(45, 212, 191, 0.28);
+            transition: opacity 0.3s ease;
+        }
+
+        .emdr-track {
+            position: absolute;
+            width: 85%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.35), transparent);
+            display: none;
         }
 
         #breath-orb {
@@ -367,146 +407,322 @@
 <div id="ambient-pulse"></div>
 
 <div class="container">
+    <div class="lang-bar">
+        <button class="lang-btn active" id="btn-bs" onclick="setLanguage('bs')">🇧🇦 BS</button>
+        <button class="lang-btn" id="btn-en" onclick="setLanguage('en')">🇬🇧 EN</button>
+    </div>
+
     <header>
         <h1>NeuroReset 0.1 Hz</h1>
-        <p>Audio-vizualna regulacija i biološki reset</p>
+        <p data-i18n="header_sub">Audio-vizualna regulacija i biološki reset</p>
     </header>
 
     <!-- 1. POSTAVKE I UPUTSTVO -->
     <div id="setup-view" class="card" style="display: flex; flex-direction: column; gap: 14px;">
         
-        <!-- Uputstvo za upotrebu -->
         <div class="info-box">
-            <h3>🧘‍♂️ Uputstvo za idealan položaj</h3>
+            <h3 data-i18n="guide_title">🧘‍♂️ Uputstvo za idealan položaj</h3>
             <ul>
-                <li><strong>Sjedi ili lezi:</strong> Stopala ravno na podu ili lezi na leđa. Opusti ramena i vilicu.</li>
-                <li><strong>Glava i vrat:</strong> Neutralan položaj da zrak nesmetano prolazi kroz nos.</li>
-                <li><strong>Slušalice:</strong> Stavi slušalice u uši za puni stereo binauralni efekt.</li>
+                <li data-i18n-html="guide_1"><strong>Sjedi ili lezi:</strong> Stopala ravno na podu ili lezi na leđa. Opusti ramena i vilicu.</li>
+                <li data-i18n-html="guide_2"><strong>Glava i vrat:</strong> Neutralan položaj da zrak nesmetano prolazi kroz nos.</li>
+                <li data-i18n-html="guide_3"><strong>Slušalice:</strong> Stavi slušalice u uši za puni stereo binauralni i EMDR efekt.</li>
             </ul>
         </div>
 
         <!-- Brzi Check-in stresa prije sesije -->
         <div>
-            <div class="section-title">0. Trenutni nivo napetosti (1 = Miran, 5 = Jak stres)</div>
+            <div class="section-title" data-i18n="sec_0">0. Trenutni nivo napetosti (1 = Miran, 5 = Jak stres)</div>
             <div class="grid-5">
-                <button class="option-btn" data-stress="1" onclick="selectStress(1, this)">1<small>Miran</small></button>
-                <button class="option-btn" data-stress="2" onclick="selectStress(2, this)">2<small>Blago</small></button>
-                <button class="option-btn active" data-stress="3" onclick="selectStress(3, this)">3<small>Srednje</small></button>
-                <button class="option-btn" data-stress="4" onclick="selectStress(4, this)">4<small>Napeto</small></button>
-                <button class="option-btn" data-stress="5" onclick="selectStress(5, this)">5<small>Jak stres</small></button>
+                <button class="option-btn" data-stress="1" onclick="selectStress(1, this)">1<small data-i18n="s_1">Miran</small></button>
+                <button class="option-btn" data-stress="2" onclick="selectStress(2, this)">2<small data-i18n="s_2">Blago</small></button>
+                <button class="option-btn active" data-stress="3" onclick="selectStress(3, this)">3<small data-i18n="s_3">Srednje</small></button>
+                <button class="option-btn" data-stress="4" onclick="selectStress(4, this)">4<small data-i18n="s_4">Napeto</small></button>
+                <button class="option-btn" data-stress="5" onclick="selectStress(5, this)">5<small data-i18n="s_5">Jak stres</small></button>
             </div>
         </div>
 
         <div>
-            <div class="section-title">1. Protokol disanja (0.1 Hz ritam)</div>
+            <div class="section-title" data-i18n="sec_1">1. Protokol disanja (0.1 Hz ritam)</div>
             <div class="grid-2">
                 <button class="option-btn active" data-protocol="coherent" onclick="selectProtocol('coherent', this)">
-                    Koherentno
-                    <small>5s udah / 5s izdah</small>
+                    <span data-i18n="prot_coh">Koherentno</span>
+                    <small data-i18n="prot_coh_sub">5s udah / 5s izdah</small>
                 </button>
                 <button class="option-btn" data-protocol="sigh" onclick="selectProtocol('sigh', this)">
-                    Fiziološki uzdah
-                    <small>2.5s + 1s udah / 6.5s izdah</small>
+                    <span data-i18n="prot_sigh">Fiziološki uzdah</span>
+                    <small data-i18n="prot_sigh_sub">2.5s + 1s udah / 6.5s izdah</small>
                 </button>
             </div>
         </div>
 
         <div>
-            <div class="section-title">2. Ciljani moždani valovi</div>
-            <div class="grid-3">
+            <div class="section-title" data-i18n="sec_2">2. Audio režim (Binauralni ili EMDR)</div>
+            <div class="grid-2">
                 <button class="option-btn active" data-wave="alpha" onclick="selectWave('alpha', this)">
-                    Alfa (8 Hz)
-                    <small>Smiren fokus</small>
+                    <span data-i18n="w_alpha">Alfa (8 Hz)</span>
+                    <small data-i18n="w_alpha_sub">Binauralni • Smiren fokus</small>
                 </button>
                 <button class="option-btn" data-wave="theta" onclick="selectWave('theta', this)">
-                    Theta (6 Hz)
-                    <small>Duboki reset</small>
+                    <span data-i18n="w_theta">Theta (6 Hz)</span>
+                    <small data-i18n="w_theta_sub">Binauralni • Duboki reset</small>
                 </button>
                 <button class="option-btn" data-wave="delta" onclick="selectWave('delta', this)">
-                    Delta (3 Hz)
-                    <small>Gašenje napetosti</small>
+                    <span data-i18n="w_delta">Delta (3 Hz)</span>
+                    <small data-i18n="w_delta_sub">Binauralni • Gašenje napetosti</small>
+                </button>
+                <button class="option-btn emdr-btn" data-wave="emdr" onclick="selectWave('emdr', this)">
+                    <span data-i18n="w_emdr">EMDR Reset (0.33 Hz)</span>
+                    <small data-i18n="w_emdr_sub">Bilateralni L/D • Emotivni blok</small>
                 </button>
             </div>
         </div>
 
         <div>
-            <div class="section-title">3. Osnovni ton (Carrier frekvencija)</div>
+            <div class="section-title" data-i18n="sec_3">3. Osnovni ton (Carrier frekvencija)</div>
             <select id="carrier-select">
-                <option value="200">200 Hz — Topli ton (Preporučeno za BT slušalice)</option>
-                <option value="432" selected>432 Hz — Prirodni balans i ravnoteža</option>
-                <option value="528">528 Hz — Solfeggio regeneracija</option>
-                <option value="174">174 Hz — Niska frekvencija za opuštanje</option>
+                <option value="200" data-i18n="c_200">200 Hz — Topli ton (Preporučeno za BT slušalice)</option>
+                <option value="432" selected data-i18n="c_432">432 Hz — Prirodni balans i ravnoteža</option>
+                <option value="528" data-i18n="c_528">528 Hz — Solfeggio regeneracija</option>
+                <option value="174" data-i18n="c_174">174 Hz — Niska frekvencija za opuštanje</option>
             </select>
         </div>
 
         <div>
-            <div class="section-title">4. Trajanje sesije</div>
+            <div class="section-title" data-i18n="sec_4">4. Trajanje sesije</div>
             <div class="grid-3" style="margin-bottom: 8px;">
-                <button class="option-btn" data-duration="60" onclick="selectDuration(60, this)">1 min<small>Brzi prekid</small></button>
-                <button class="option-btn active" data-duration="180" onclick="selectDuration(180, this)">3 min<small>Puni reset</small></button>
-                <button class="option-btn" data-duration="300" onclick="selectDuration(300, this)">5 min<small>Duboka obnova</small></button>
+                <button class="option-btn" data-duration="60" onclick="selectDuration(60, this)">1 min<small data-i18n="d_1">Brzi prekid</small></button>
+                <button class="option-btn active" data-duration="180" onclick="selectDuration(180, this)">3 min<small data-i18n="d_3">Puni reset</small></button>
+                <button class="option-btn" data-duration="300" onclick="selectDuration(300, this)">5 min<small data-i18n="d_5">Duboka obnova</small></button>
             </div>
 
             <div class="toggle-row">
-                <span>Zvučni šum disanja <small>Prati ritam (za rad zatvorenih očiju)</small></span>
+                <span>
+                    <span data-i18n="tog_audio">Zvučni šum disanja</span>
+                    <small data-i18n="tog_audio_sub">Prati ritam (za rad zatvorenih očiju)</small>
+                </span>
                 <input type="checkbox" id="breath-audio-toggle" checked>
             </div>
 
             <div class="toggle-row">
-                <span>Vizualna pulsacija pozadine <small>Sigurna Alfa modulacija</small></span>
+                <span>
+                    <span data-i18n="tog_vis">Vizualna pulsacija pozadine</span>
+                    <small data-i18n="tog_vis_sub">Sigurna Alfa modulacija</small>
+                </span>
                 <input type="checkbox" id="visual-pulse-toggle" checked>
             </div>
         </div>
 
-        <button class="primary-btn" onclick="startSession()">POKRENI RESET SESIJU</button>
+        <button class="primary-btn" onclick="startSession()" data-i18n="btn_start">POKRENI RESET SESIJU</button>
     </div>
 
     <!-- 2. AKTIVNA SESIJA -->
     <div id="session-view" class="card">
         <div class="timer-badge" id="timer-display">03:00</div>
 
-        <div class="visualizer-wrapper">
-            <div class="outer-ring"></div>
+        <div class="visualizer-wrapper" id="visualizer-box">
+            <div class="outer-ring" id="outer-ring"></div>
+            <div class="emdr-track" id="emdr-track"></div>
             <div id="breath-orb"></div>
         </div>
 
         <div class="instruction-box">
-            <div id="breath-phase-text">PRIPREMI SE</div>
-            <div id="breath-sub-text">Gledaj u krug ili zatvori oči i prati zvuk</div>
+            <div id="breath-phase-text" data-i18n="prep_title">PRIPREMI SE</div>
+            <div id="breath-sub-text" data-i18n="prep_sub">Gledaj u krug ili zatvori oči i prati zvuk</div>
         </div>
 
-        <button class="secondary-btn" onclick="stopSession(false)">Prekini sesiju</button>
+        <button class="secondary-btn" onclick="stopSession(false)" data-i18n="btn_stop">Prekini sesiju</button>
     </div>
 
     <!-- 3. REZULTAT NAKON SESIJE -->
     <div id="result-view" class="card">
         <div class="status-banner">
-            <h2>Reset završen — Sustav je u balansu</h2>
+            <h2 data-i18n="res_title">Reset završen — Sustav je u balansu</h2>
             <p id="result-summary-intro"></p>
         </div>
 
         <div>
-            <div class="section-title">Kako se osjećaš sada nakon sesije?</div>
+            <div class="section-title" data-i18n="res_q">Kako se osjećaš sada nakon sesije?</div>
             <div class="grid-5" id="post-stress-grid">
-                <button class="option-btn" onclick="recordPostStress(1, this)">1<small>Miran</small></button>
-                <button class="option-btn" onclick="recordPostStress(2, this)">2<small>Opušten</small></button>
-                <button class="option-btn" onclick="recordPostStress(3, this)">3<small>Bolje</small></button>
-                <button class="option-btn" onclick="recordPostStress(4, this)">4<small>Napeto</small></button>
-                <button class="option-btn" onclick="recordPostStress(5, this)">5<small>Isto</small></button>
+                <button class="option-btn" onclick="recordPostStress(1, this)">1<small data-i18n="ps_1">Miran</small></button>
+                <button class="option-btn" onclick="recordPostStress(2, this)">2<small data-i18n="ps_2">Opušten</small></button>
+                <button class="option-btn" onclick="recordPostStress(3, this)">3<small data-i18n="ps_3">Bolje</small></button>
+                <button class="option-btn" onclick="recordPostStress(4, this)">4<small data-i18n="ps_4">Napeto</small></button>
+                <button class="option-btn" onclick="recordPostStress(5, this)">5<small data-i18n="ps_5">Isto</small></button>
             </div>
             <p id="stress-comparison-msg" style="font-size: 0.82rem; color: #5eead4; margin-top: 8px; text-align: center; font-weight: 600;"></p>
         </div>
 
         <div>
-            <div class="section-title">Što su ove frekvencije upravo uradile tvom organizmu:</div>
+            <div class="section-title" data-i18n="res_effects_title">Što su ove frekvencije upravo uradile tvom organizmu:</div>
             <ul class="effect-list" id="result-effects-list"></ul>
         </div>
 
-        <button class="primary-btn" onclick="resetToHome()">Nova sesija</button>
+        <button class="primary-btn" onclick="resetToHome()" data-i18n="btn_new">Nova sesija</button>
     </div>
 </div>
 
 <script>
+    const i18n = {
+        bs: {
+            header_sub: "Audio-vizualna regulacija i biološki reset",
+            guide_title: "🧘‍♂️ Uputstvo za idealan položaj",
+            guide_1: "<strong>Sjedi ili lezi:</strong> Stopala ravno na podu ili lezi na leđa. Opusti ramena i vilicu.",
+            guide_2: "<strong>Glava i vrat:</strong> Neutralan položaj da zrak nesmetano prolazi kroz nos.",
+            guide_3: "<strong>Slušalice:</strong> Stavi slušalice u uši za puni stereo binauralni i EMDR efekt.",
+            sec_0: "0. Trenutni nivo napetosti (1 = Miran, 5 = Jak stres)",
+            s_1: "Miran", s_2: "Blago", s_3: "Srednje", s_4: "Napeto", s_5: "Jak stres",
+            sec_1: "1. Protokol disanja (0.1 Hz ritam)",
+            prot_coh: "Koherentno", prot_coh_sub: "5s udah / 5s izdah",
+            prot_sigh: "Fiziološki uzdah", prot_sigh_sub: "2.5s + 1s udah / 6.5s izdah",
+            sec_2: "2. Audio režim (Binauralni ili EMDR)",
+            w_alpha: "Alfa (8 Hz)", w_alpha_sub: "Binauralni • Smiren fokus",
+            w_theta: "Theta (6 Hz)", w_theta_sub: "Binauralni • Duboki reset",
+            w_delta: "Delta (3 Hz)", w_delta_sub: "Binauralni • Gašenje napetosti",
+            w_emdr: "EMDR Reset (0.33 Hz)", w_emdr_sub: "Bilateralni L/D • Emotivni blok",
+            sec_3: "3. Osnovni ton (Carrier frekvencija)",
+            c_200: "200 Hz — Topli ton (Preporučeno za BT slušalice)",
+            c_432: "432 Hz — Prirodni balans i ravnoteža",
+            c_528: "528 Hz — Solfeggio regeneracija",
+            c_174: "174 Hz — Niska frekvencija za opuštanje",
+            sec_4: "4. Trajanje sesije",
+            d_1: "Brzi prekid", d_3: "Puni reset", d_5: "Duboka obnova",
+            tog_audio: "Zvučni šum disanja", tog_audio_sub: "Prati ritam (za rad zatvorenih očiju)",
+            tog_vis: "Vizualna pulsacija pozadine", tog_vis_sub: "Sigurna Alfa modulacija",
+            btn_start: "POKRENI RESET SESIJU",
+            prep_title: "PRIPREMI SE",
+            prep_sub: "Gledaj u krug ili zatvori oči i prati zvuk",
+            btn_stop: "Prekini sesiju",
+            res_title: "Reset završen — Sustav je u balansu",
+            res_q: "Kako se osjećaš sada nakon sesije?",
+            ps_1: "Miran", ps_2: "Opušten", ps_3: "Bolje", ps_4: "Napeto", ps_5: "Isto",
+            res_effects_title: "Što su ove frekvencije upravo uradile tvom organizmu:",
+            btn_new: "Nova sesija",
+            inhale_nose: "UDAH KROZ NOS",
+            inhale_nose_sub: "Polako i duboko širi pluća (5s)",
+            exhale_soft: "LAGANI IZDAH",
+            exhale_soft_sub: "Opusti ramena i ispusti sav zrak (5s)",
+            inhale_deep: "DUBOKI UDAH",
+            inhale_deep_sub: "Napuni pluća kroz nos",
+            inhale_top: "KRATKI DOPUNSKI UDAH",
+            inhale_top_sub: "Povuci još malo zraka do vrha!",
+            exhale_long: "DUGI, SPORI IZDAH",
+            exhale_long_sub: "Polako ispuštaj zrak kroz usta (6.5s)",
+            emdr_sub_hint: "Prati očima krug lijevo-desno i diši u ritmu",
+            vagus_title: "2. Živac Vagus i srčani ritam (0.1 Hz)",
+            vagus_desc: "Ritmom od 6 ciklusa u minuti aktiviran je parasimpatikus. Usklađeni su rad srca i disanje (HRV), čime je prekinuto lučenje kortizola.",
+            base_title: "3. Zvučna baza"
+        },
+        en: {
+            header_sub: "Audio-Visual Regulation & Biological Reset",
+            guide_title: "🧘‍♂️ Optimal Posture Guide",
+            guide_1: "<strong>Sit or lie down:</strong> Feet flat on the floor or lie on your back. Relax shoulders and jaw.",
+            guide_2: "<strong>Head & neck:</strong> Neutral alignment so air flows freely through your nose.",
+            guide_3: "<strong>Headphones:</strong> Wear stereo headphones for full binaural and EMDR bilateral effect.",
+            sec_0: "0. Current tension level (1 = Calm, 5 = High stress)",
+            s_1: "Calm", s_2: "Mild", s_3: "Moderate", s_4: "Tense", s_5: "High stress",
+            sec_1: "1. Breathing Protocol (0.1 Hz rhythm)",
+            prot_coh: "Coherent", prot_coh_sub: "5s inhale / 5s exhale",
+            prot_sigh: "Physiological Sigh", prot_sigh_sub: "2.5s + 1s inhale / 6.5s exhale",
+            sec_2: "2. Audio Mode (Binaural or EMDR)",
+            w_alpha: "Alpha (8 Hz)", w_alpha_sub: "Binaural • Calm focus",
+            w_theta: "Theta (6 Hz)", w_theta_sub: "Binaural • Deep reset",
+            w_delta: "Delta (3 Hz)", w_delta_sub: "Binaural • Tension release",
+            w_emdr: "EMDR Reset (0.33 Hz)", w_emdr_sub: "Bilateral L/R • Emotional block",
+            sec_3: "3. Base Tone (Carrier frequency)",
+            c_200: "200 Hz — Warm tone (Recommended for BT headphones)",
+            c_432: "432 Hz — Natural balance & harmony",
+            c_528: "528 Hz — Solfeggio regeneration",
+            c_174: "174 Hz — Low grounding frequency",
+            sec_4: "4. Session Duration",
+            d_1: "Quick break", d_3: "Full reset", d_5: "Deep recovery",
+            tog_audio: "Breathing breath-noise guide", tog_audio_sub: "Follows rhythm (for eyes-closed use)",
+            tog_vis: "Ambient visual pulsation", tog_vis_sub: "Safe Alpha modulation",
+            btn_start: "START RESET SESSION",
+            prep_title: "GET READY",
+            prep_sub: "Focus on the orb or close your eyes and follow the sound",
+            btn_stop: "Stop session",
+            res_title: "Reset Complete — System Balanced",
+            res_q: "How do you feel right now after the session?",
+            ps_1: "Calm", ps_2: "Relaxed", ps_3: "Better", ps_4: "Tense", ps_5: "Same",
+            res_effects_title: "What these frequencies just did to your nervous system:",
+            btn_new: "New session",
+            inhale_nose: "INHALE THROUGH NOSE",
+            inhale_nose_sub: "Slowly and deeply expand your lungs (5s)",
+            exhale_soft: "GENTLE EXHALE",
+            exhale_soft_sub: "Drop your shoulders and release all air (5s)",
+            inhale_deep: "DEEP INHALE",
+            inhale_deep_sub: "Fill your lungs through your nose",
+            inhale_top: "SHORT TOP-UP INHALE",
+            inhale_top_sub: "Sip a little more air to the top!",
+            exhale_long: "LONG, SLOW EXHALE",
+            exhale_long_sub: "Slowly release air through your mouth (6.5s)",
+            emdr_sub_hint: "Follow the orb left-to-right with your eyes and breathe",
+            vagus_title: "2. Vagus Nerve & Heart Rate (0.1 Hz)",
+            vagus_desc: "At 6 breaths per minute, your parasympathetic system was activated, synchronizing heart rate and breathing (HRV) to halt cortisol release.",
+            base_title: "3. Sound Base"
+        }
+    };
+
+    const waveDetails = {
+        alpha: {
+            hz: 8,
+            name: { bs: "Alfa valovi (8 Hz)", en: "Alpha Waves (8 Hz)" },
+            title: { bs: "1. Moždani valovi — Alfa (8 Hz)", en: "1. Brainwaves — Alpha (8 Hz)" },
+            brainEffect: {
+                bs: "Spustio si mozak iz stresnog Beta stanja u opuštenu, ali budnu Alfa zonu. Osjećaj bistrine bez unutarnjeg grča.",
+                en: "Shifted your brain from high-stress Beta into a relaxed yet alert Alpha state. Clear mind without inner tension."
+            }
+        },
+        theta: {
+            hz: 6,
+            name: { bs: "Theta valovi (6 Hz)", en: "Theta Waves (6 Hz)" },
+            title: { bs: "1. Moždani valovi — Theta (6 Hz)", en: "1. Brainwaves — Theta (6 Hz)" },
+            brainEffect: {
+                bs: "Uveo si moždanu koru u duboku Theta relaksaciju. Mentalni šum i pretjerano razmišljanje su utišani.",
+                en: "Guided your cortex into deep Theta relaxation. Mental noise and overthinking have been quieted."
+            }
+        },
+        delta: {
+            hz: 3,
+            name: { bs: "Delta valovi (3 Hz)", en: "Delta Waves (3 Hz)" },
+            title: { bs: "1. Moždani valovi — Delta (3 Hz)", en: "1. Brainwaves — Delta (3 Hz)" },
+            brainEffect: {
+                bs: "Aktivirao si regenerativne frekvencije koje gase akutnu napetost i fizički umor u mišićima.",
+                en: "Activated restorative frequencies that shut down acute tension and physical muscle fatigue."
+            }
+        },
+        emdr: {
+            hz: 0.33,
+            name: { bs: "EMDR Bilateralni zvuk (0.33 Hz)", en: "EMDR Bilateral Sound (0.33 Hz)" },
+            title: { bs: "1. Bilateralna stimulacija — EMDR (0.33 Hz)", en: "1. Bilateral Stimulation — EMDR (0.33 Hz)" },
+            brainEffect: {
+                bs: "Naizmjeničnim klizanjem zvuka i pogleda lijevo-desno aktivirane su obje moždane hemisfere, čime je prekinuta emotivna petlja i rasterećena radna memorija.",
+                en: "Alternating left-right sound and eye tracking engaged both brain hemispheres, breaking emotional loops and freeing working memory."
+            }
+        }
+    };
+
+    const carrierDetails = {
+        174: {
+            bs: "Osnovni ton od 174 Hz djeluje kao prirodni smirivač i daje tijelu osjećaj fizičke stabilnosti.",
+            en: "The 174 Hz base tone acts as a natural grounding anchor, giving the body physical stability."
+        },
+        200: {
+            bs: "Topli osnovni ton od 200 Hz stvara stabilnu zvučnu izolaciju od vanjskih smetnji.",
+            en: "The warm 200 Hz base tone creates stable acoustic insulation from external distractions."
+        },
+        432: {
+            bs: "Frekvencija od 432 Hz smanjuje mentalnu napetost i ostavlja osjećaj ravnoteže.",
+            en: "The 432 Hz frequency reduces mental tension and leaves a sense of natural equilibrium."
+        },
+        528: {
+            bs: "Frekvencija od 528 Hz potiče relaksaciju, smanjuje kortizol i podiže vitalnost.",
+            en: "The 528 Hz frequency promotes deep relaxation, lowers cortisol, and supports vitality."
+        }
+    };
+
+    let currentLang = localStorage.getItem('neuro_lang') || 'bs';
+
     let config = {
         preStress: 3,
         protocol: 'coherent',
@@ -515,34 +731,8 @@
         duration: 180
     };
 
-    const waveDetails = {
-        alpha: {
-            hz: 8,
-            name: "Alfa valovi (8 Hz)",
-            brainEffect: "Spustio si mozak iz stresnog Beta stanja u opuštenu, ali budnu Alfa zonu. Osjećaj bistrine bez unutarnjeg grča."
-        },
-        theta: {
-            hz: 6,
-            name: "Theta valovi (6 Hz)",
-            brainEffect: "Uveo si moždanu koru u duboku Theta relaksaciju. Mentalni šum i pretjerano razmišljanje su utišani."
-        },
-        delta: {
-            hz: 3,
-            name: "Delta valovi (3 Hz)",
-            brainEffect: "Aktivirao si regenerativne frekvencije koje gase akutnu napetost i fizički umor u mišićima."
-        }
-    };
-
-    const carrierDetails = {
-        174: "Osnovni ton od 174 Hz djeluje kao prirodni smirivač i daje tijelu osjećaj fizičke stabilnosti.",
-        200: "Topli osnovni ton od 200 Hz stvara stabilnu zvučnu izolaciju od vanjskih smetnji.",
-        432: "Frekvencija od 432 Hz smanjuje mentalnu napetost i ostavlja osjećaj ravnoteže.",
-        528: "Frekvencija od 528 Hz potiče relaksaciju, smanjuje kortizol i podiže vitalnost."
-    };
-
     let audioCtx = null;
-    let oscLeft = null;
-    let oscRight = null;
+    let activeModeEngine = null; // Ekskluzivni kontroler: drži samo Binaural ILI samo EMDR
     let masterGain = null;
     let noiseNode = null;
     let noiseFilter = null;
@@ -551,6 +741,39 @@
     let isRunning = false;
     let sessionStartTime = 0;
     let animFrameId = null;
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        localStorage.setItem('neuro_lang', lang);
+        document.documentElement.lang = lang;
+
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (i18n[lang] && i18n[lang][key]) {
+                el.textContent = i18n[lang][key];
+            }
+        });
+
+        document.querySelectorAll('[data-i18n-html]').forEach(el => {
+            const key = el.getAttribute('data-i18n-html');
+            if (i18n[lang] && i18n[lang][key]) {
+                el.innerHTML = i18n[lang][key];
+            }
+        });
+
+        document.getElementById('btn-bs').classList.toggle('active', lang === 'bs');
+        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        if (!localStorage.getItem('neuro_lang')) {
+            const navLang = (navigator.language || 'bs').toLowerCase();
+            if (!navLang.startsWith('bs') && !navLang.startsWith('hr') && !navLang.startsWith('sr')) {
+                currentLang = 'en';
+            }
+        }
+        setLanguage(currentLang);
+    });
 
     function selectStress(val, btn) {
         config.preStress = val;
@@ -576,36 +799,95 @@
         btn.classList.add('active');
     }
 
+    // BINAURALNI ENGINE (radi isključivo kada nije EMDR)
+    function createBinauralMode(ctx, carrierFreq, beatFreq, destination) {
+        const oscLeft = ctx.createOscillator();
+        const panLeft = ctx.createStereoPanner();
+        oscLeft.type = 'sine';
+        oscLeft.frequency.setValueAtTime(carrierFreq, ctx.currentTime);
+        panLeft.pan.setValueAtTime(-1, ctx.currentTime);
+        oscLeft.connect(panLeft);
+        panLeft.connect(destination);
+
+        const oscRight = ctx.createOscillator();
+        const panRight = ctx.createStereoPanner();
+        oscRight.type = 'sine';
+        oscRight.frequency.setValueAtTime(carrierFreq + beatFreq, ctx.currentTime);
+        panRight.pan.setValueAtTime(1, ctx.currentTime);
+        oscRight.connect(panRight);
+        panRight.connect(destination);
+
+        oscLeft.start();
+        oscRight.start();
+
+        return {
+            stop: () => {
+                try {
+                    oscLeft.stop();
+                    oscRight.stop();
+                } catch (e) {}
+            }
+        };
+    }
+
+    // EMDR BILATERALNI ENGINE (radi isključivo umjesto binauralnog)
+    function createEMDRMode(ctx, carrierFreq, panSpeedHz, destination) {
+        const carrierOsc = ctx.createOscillator();
+        carrierOsc.type = 'sine';
+        carrierOsc.frequency.setValueAtTime(carrierFreq, ctx.currentTime);
+
+        const panner = ctx.createStereoPanner();
+
+        const lfo = ctx.createOscillator();
+        lfo.type = 'sine';
+        lfo.frequency.setValueAtTime(panSpeedHz, ctx.currentTime);
+
+        const lfoGain = ctx.createGain();
+        lfoGain.gain.setValueAtTime(0.9, ctx.currentTime);
+
+        lfo.connect(lfoGain);
+        lfoGain.connect(panner.pan);
+
+        carrierOsc.connect(panner);
+        panner.connect(destination);
+
+        carrierOsc.start();
+        lfo.start();
+
+        return {
+            stop: () => {
+                try {
+                    carrierOsc.stop();
+                    lfo.stop();
+                } catch (e) {}
+            }
+        };
+    }
+
     function initAudioEngine() {
+        // Ako je slučajno ostao aktivan prethodni engine, prvo ga gasimo
+        if (activeModeEngine) {
+            activeModeEngine.stop();
+            activeModeEngine = null;
+        }
+
         const AudioContextClass = window.AudioContext || window.webkitAudioContext;
         audioCtx = new AudioContextClass();
 
         config.carrier = parseFloat(document.getElementById('carrier-select').value);
-        const beatFreq = waveDetails[config.wave].hz;
 
         masterGain = audioCtx.createGain();
         masterGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
         masterGain.gain.exponentialRampToValueAtTime(0.28, audioCtx.currentTime + 1.5);
         masterGain.connect(audioCtx.destination);
 
-        oscLeft = audioCtx.createOscillator();
-        const panLeft = audioCtx.createStereoPanner();
-        oscLeft.type = 'sine';
-        oscLeft.frequency.setValueAtTime(config.carrier, audioCtx.currentTime);
-        panLeft.pan.setValueAtTime(-1, audioCtx.currentTime);
-        oscLeft.connect(panLeft);
-        panLeft.connect(masterGain);
-
-        oscRight = audioCtx.createOscillator();
-        const panRight = audioCtx.createStereoPanner();
-        oscRight.type = 'sine';
-        oscRight.frequency.setValueAtTime(config.carrier + beatFreq, audioCtx.currentTime);
-        panRight.pan.setValueAtTime(1, audioCtx.currentTime);
-        oscRight.connect(panRight);
-        panRight.connect(masterGain);
-
-        oscLeft.start();
-        oscRight.start();
+        // Ekskluzivno pokretanje: ILI EMDR ILI Binaural
+        if (config.wave === 'emdr') {
+            activeModeEngine = createEMDRMode(audioCtx, config.carrier, 0.33, masterGain);
+        } else {
+            const beatFreq = waveDetails[config.wave].hz;
+            activeModeEngine = createBinauralMode(audioCtx, config.carrier, beatFreq, masterGain);
+        }
 
         if (document.getElementById('breath-audio-toggle').checked) {
             const bufferSize = audioCtx.sampleRate * 4;
@@ -642,33 +924,44 @@
         try {
             const now = audioCtx.currentTime;
             masterGain.gain.setValueAtTime(masterGain.gain.value, now);
-            masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
+            masterGain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
             setTimeout(() => {
-                if (oscLeft) oscLeft.stop();
-                if (oscRight) oscRight.stop();
-                if (noiseNode) noiseNode.stop();
-                if (audioCtx) audioCtx.close();
-                audioCtx = null;
-            }, 650);
+                if (activeModeEngine) {
+                    activeModeEngine.stop();
+                    activeModeEngine = null;
+                }
+                if (noiseNode) {
+                    try { noiseNode.stop(); } catch (e) {}
+                    noiseNode = null;
+                }
+                if (audioCtx) {
+                    audioCtx.close();
+                    audioCtx = null;
+                }
+            }, 850);
         } catch (e) {
             console.error(e);
         }
     }
 
     function startSession() {
-        // Slanje događaja u Google Analytics kad netko pokrene sesiju
         if (typeof gtag === 'function') {
             gtag('event', 'session_start', {
                 'protocol': config.protocol,
                 'wave': config.wave,
                 'carrier': config.carrier,
-                'duration_sec': config.duration
+                'duration_sec': config.duration,
+                'language': currentLang
             });
         }
 
         document.getElementById('setup-view').style.display = 'none';
         document.getElementById('result-view').style.display = 'none';
         document.getElementById('session-view').style.display = 'flex';
+
+        const isEMDR = config.wave === 'emdr';
+        document.getElementById('outer-ring').style.opacity = isEMDR ? '0.15' : '1';
+        document.getElementById('emdr-track').style.display = isEMDR ? 'block' : 'none';
 
         initAudioEngine();
         isRunning = true;
@@ -679,6 +972,7 @@
     function updateLoop(now) {
         if (!isRunning) return;
 
+        const tDict = i18n[currentLang];
         const elapsedSec = (now - sessionStartTime) / 1000;
         const remainingSec = Math.max(0, config.duration - elapsedSec);
 
@@ -701,36 +995,45 @@
             if (cyclePos < 5) {
                 const t = cyclePos / 5;
                 breathLevel = 0.5 - 0.5 * Math.cos(Math.PI * t);
-                phaseTitle = "UDAH KROZ NOS";
-                phaseSub = "Polako i duboko širi pluća (5s)";
+                phaseTitle = tDict.inhale_nose;
+                phaseSub = tDict.inhale_nose_sub;
             } else {
                 const t = (cyclePos - 5) / 5;
                 breathLevel = 0.5 + 0.5 * Math.cos(Math.PI * t);
-                phaseTitle = "LAGANI IZDAH";
-                phaseSub = "Opusti ramena i ispusti sav zrak (5s)";
+                phaseTitle = tDict.exhale_soft;
+                phaseSub = tDict.exhale_soft_sub;
             }
         } else {
             if (cyclePos < 2.5) {
                 const t = cyclePos / 2.5;
                 breathLevel = 0.78 * (0.5 - 0.5 * Math.cos(Math.PI * t));
-                phaseTitle = "DUBOKI UDAH";
-                phaseSub = "Napuni pluća kroz nos";
+                phaseTitle = tDict.inhale_deep;
+                phaseSub = tDict.inhale_deep_sub;
             } else if (cyclePos < 3.5) {
                 const t = (cyclePos - 2.5) / 1.0;
                 breathLevel = 0.78 + 0.22 * (0.5 - 0.5 * Math.cos(Math.PI * t));
-                phaseTitle = "KRATKI DOPUNSKI UDAH";
-                phaseSub = "Povuci još malo zraka do vrha!";
+                phaseTitle = tDict.inhale_top;
+                phaseSub = tDict.inhale_top_sub;
             } else {
                 const t = (cyclePos - 3.5) / 6.5;
                 breathLevel = 0.5 + 0.5 * Math.cos(Math.PI * t);
-                phaseTitle = "DUGI, SPORI IZDAH";
-                phaseSub = "Polako ispuštaj zrak kroz usta (6.5s)";
+                phaseTitle = tDict.exhale_long;
+                phaseSub = tDict.exhale_long_sub;
             }
         }
 
         const orb = document.getElementById('breath-orb');
-        const scale = 0.85 + (breathLevel * 0.9);
-        orb.style.transform = `scale(${scale.toFixed(4)})`;
+        if (config.wave === 'emdr') {
+            // Sinhronizovano lijevo-desno klizanje sa 0.33 Hz LFO-om + blago disanje
+            const maxSlide = (document.getElementById('visualizer-box').clientWidth / 2) - 65;
+            const panX = Math.sin(2 * Math.PI * 0.33 * elapsedSec) * maxSlide;
+            const scale = 0.75 + (breathLevel * 0.25);
+            orb.style.transform = `translateX(${panX.toFixed(2)}px) scale(${scale.toFixed(4)})`;
+            phaseSub = tDict.emdr_sub_hint;
+        } else {
+            const scale = 0.85 + (breathLevel * 0.9);
+            orb.style.transform = `translateX(0px) scale(${scale.toFixed(4)})`;
+        }
 
         document.getElementById('breath-phase-text').textContent = phaseTitle;
         document.getElementById('breath-sub-text').textContent = phaseSub;
@@ -744,8 +1047,8 @@
 
         const ambient = document.getElementById('ambient-pulse');
         if (document.getElementById('visual-pulse-toggle').checked) {
-            const beatHz = waveDetails[config.wave].hz;
-            const pulse = 0.94 + 0.06 * Math.sin(2 * Math.PI * beatHz * elapsedSec);
+            const pulseHz = config.wave === 'emdr' ? 0.33 : waveDetails[config.wave].hz;
+            const pulse = 0.94 + 0.06 * Math.sin(2 * Math.PI * pulseHz * elapsedSec);
             ambient.style.opacity = pulse.toFixed(3);
         } else {
             ambient.style.opacity = "0.9";
@@ -763,7 +1066,8 @@
         if (completed) {
             if (typeof gtag === 'function') {
                 gtag('event', 'session_completed', {
-                    'duration_sec': config.duration
+                    'duration_sec': config.duration,
+                    'wave': config.wave
                 });
             }
             showResultScreen();
@@ -778,28 +1082,37 @@
         document.getElementById('stress-comparison-msg').textContent = "";
         document.querySelectorAll('#post-stress-grid .option-btn').forEach(b => b.classList.remove('active'));
 
+        const tDict = i18n[currentLang];
         const waveInfo = waveDetails[config.wave];
         const minutesDone = Math.round(config.duration / 60);
-        const protocolName = config.protocol === 'coherent'
-            ? "Koherentno disanje (0.1 Hz)"
-            : "Fiziološki uzdah (0.1 Hz)";
 
-        document.getElementById('result-summary-intro').textContent =
-            `Odradio si ${minutesDone} min protokola: ${protocolName} + ${waveInfo.name} na bazi od ${config.carrier} Hz. Živčani sustav je izašao iz stanja stresa.`;
+        if (currentLang === 'bs') {
+            const protocolName = config.protocol === 'coherent'
+                ? "Koherentno disanje (0.1 Hz)"
+                : "Fiziološki uzdah (0.1 Hz)";
+            document.getElementById('result-summary-intro').textContent =
+                `Odradio si ${minutesDone} min protokola: ${protocolName} + ${waveInfo.name.bs} na bazi od ${config.carrier} Hz. Živčani sustav je izašao iz stanja stresa.`;
+        } else {
+            const protocolName = config.protocol === 'coherent'
+                ? "Coherent Breathing (0.1 Hz)"
+                : "Physiological Sigh (0.1 Hz)";
+            document.getElementById('result-summary-intro').textContent =
+                `You completed ${minutesDone} min of: ${protocolName} + ${waveInfo.name.en} on a ${config.carrier} Hz carrier. Your nervous system has shifted out of stress.`;
+        }
 
         const list = document.getElementById('result-effects-list');
         list.innerHTML = `
             <li>
-                <strong>1. Moždani valovi — ${waveInfo.name}</strong>
-                ${waveInfo.brainEffect}
+                <strong>${waveInfo.title[currentLang]}</strong>
+                ${waveInfo.brainEffect[currentLang]}
             </li>
             <li>
-                <strong>2. Živac Vagus i srčani ritam (0.1 Hz)</strong>
-                Ritmom od 6 ciklusa u minuti aktiviran je parasimpatikus. Usklađeni su rad srca i disanje (HRV), čime je prekinuto lučenje kortizola.
+                <strong>${tDict.vagus_title}</strong>
+                ${tDict.vagus_desc}
             </li>
             <li>
-                <strong>3. Zvučna baza (${config.carrier} Hz)</strong>
-                ${carrierDetails[config.carrier]}
+                <strong>${tDict.base_title} (${config.carrier} Hz)</strong>
+                ${carrierDetails[config.carrier][currentLang]}
             </li>
         `;
     }
@@ -811,13 +1124,24 @@
         const diff = config.preStress - postVal;
         const msgEl = document.getElementById('stress-comparison-msg');
 
-        if (diff > 0) {
-            const pct = Math.round((diff / config.preStress) * 100);
-            msgEl.textContent = `Odlično! Napetost ti je pala s ${config.preStress}/5 na ${postVal}/5 (−${pct}%).`;
-        } else if (diff === 0) {
-            msgEl.textContent = `Stanje je stabilno (${postVal}/5). Za dublji efekt probaj Theta (6 Hz) na 5 minuta.`;
+        if (currentLang === 'bs') {
+            if (diff > 0) {
+                const pct = Math.round((diff / config.preStress) * 100);
+                msgEl.textContent = `Odlično! Napetost ti je pala s ${config.preStress}/5 na ${postVal}/5 (−${pct}%).`;
+            } else if (diff === 0) {
+                msgEl.textContent = `Stanje je stabilno (${postVal}/5). Za dublji efekt probaj EMDR Reset ili Theta (6 Hz) na 5 minuta.`;
+            } else {
+                msgEl.textContent = `Zabilježeno (${postVal}/5). Opusti ramena i probaj Fiziološki uzdah.`;
+            }
         } else {
-            msgEl.textContent = `Zabilježeno (${postVal}/5). Opusti ramena i probaj Fiziološki uzdah.`;
+            if (diff > 0) {
+                const pct = Math.round((diff / config.preStress) * 100);
+                msgEl.textContent = `Great! Your tension dropped from ${config.preStress}/5 to ${postVal}/5 (−${pct}%).`;
+            } else if (diff === 0) {
+                msgEl.textContent = `State is stable (${postVal}/5). For a deeper shift, try EMDR Reset or Theta (6 Hz) for 5 minutes.`;
+            } else {
+                msgEl.textContent = `Recorded (${postVal}/5). Relax your shoulders and try the Physiological Sigh.`;
+            }
         }
     }
 
