@@ -512,7 +512,7 @@
                 <input type="checkbox" id="visual-pulse-toggle" checked>
             </div>
 
-            <!-- NOVI PREKIDAČ: UČENJE KUR'ANA U POZADINI -->
+            <!-- PREKIDAČ ZA UČENJE KUR'ANA -->
             <div class="toggle-row" style="border-top: 1px solid var(--border-subtle); margin-top: 8px; padding-top: 10px;">
                 <span>
                     <span data-i18n="tog_quran">📿 Učenje Kur'ana u pozadini</span>
@@ -760,9 +760,8 @@
     let noiseFilter = null;
     let noiseGain = null;
 
-    // Kur'an audio elementi
-    let quranAudioElem = null;
-    let quranAudioNode = null;
+    // Čisti HTML5 Audio objekt za Kur'an (bez CORS blokada)
+    let quranAudio = null;
 
     let isRunning = false;
     let sessionStartTime = 0;
@@ -940,37 +939,22 @@
             noiseNode.start();
         }
 
-        // AKO JE UKLJUČEN PREKIDAČ ZA KUR'AN
+        // POKRETANJE KUR'ANA (Direktni HTML5 Audio element za stabilnost na mobitelu)
         if (document.getElementById('quran-audio-toggle').checked) {
-            quranAudioElem = new Audio();
-            // Provjereni stabilni MP3Quran link (smirujući učač - sura Ar-Rahman / opći smirujući odlomak)
-            quranAudioElem.src = "https://download.quranicaudio.com/quran/mishaari_rashid_al_afaasee/055.mp3";
-            quranAudioElem.crossOrigin = "anonymous";
-            quranAudioElem.loop = true;
-            quranAudioElem.volume = 0.42; // Blaga glasnoća da frekvencija otvori prostor, a glas uđe u glavu
-
-            try {
-                quranAudioNode = audioCtx.createMediaElementSource(quranAudioElem);
-                const quranGain = audioCtx.createGain();
-                quranGain.gain.setValueAtTime(0.45, audioCtx.currentTime); // Fino dozirano da se ne tuče sa tonom
-
-                quranAudioNode.connect(quranGain);
-                quranGain.connect(masterGain);
-                quranAudioElem.play().catch(err => console.log("Audio play blocked or loading:", err));
-            } catch (e) {
-                // Fallback ako CORS ili browser blokira media element source
-                quranAudioElem.play().catch(err => console.log(err));
-            }
+            quranAudio = new Audio("https://download.quranicaudio.com/quran/mishaari_rashid_al_afaasee/055.mp3");
+            quranAudio.loop = true;
+            quranAudio.volume = 0.45; // Fino dozirano da se frekvencija i glas dopunjuju
+            quranAudio.play().catch(err => console.log("Quran audio play error:", err));
         }
     }
 
     function stopAudioEngine() {
-        if (quranAudioElem) {
+        if (quranAudio) {
             try {
-                quranAudioElem.pause();
-                quranAudioElem.currentTime = 0;
+                quranAudio.pause();
+                quranAudio.currentTime = 0;
             } catch (e) {}
-            quranAudioElem = null;
+            quranAudio = null;
         }
 
         if (!audioCtx) return;
@@ -1200,7 +1184,7 @@
             }
         } else {
             if (diff > 0) {
-                const pct = Math.round((diff / config.preShift || diff / config.preStress) * 100);
+                const pct = Math.round((diff / config.preStress) * 100);
                 msgEl.textContent = `Great! Your tension dropped from ${config.preStress}/5 to ${postVal}/5 (−${pct}%).`;
             } else if (diff === 0) {
                 msgEl.textContent = `State is stable (${postVal}/5). For a deeper shift, try EMDR Reset or Theta (6 Hz) for 5 minutes.`;
@@ -1219,3 +1203,4 @@
 
 </body>
 </html>
+    
