@@ -941,7 +941,7 @@
 
         // POKRETANJE KUR'ANA (Direktni HTML5 Audio element za stabilnost na mobitelu)
         if (document.getElementById('quran-audio-toggle').checked) {
-            quranAudio = new Audio("https://download.quranicaudio.com/quran/mishaari_rashid_al_afaasee/055.mp3");
+            quranAudio = new Audio("https://server8.mp3quran.net/afs/055.mp3");
             quranAudio.loop = true;
             quranAudio.volume = 0.45; // Fino dozirano da se frekvencija i glas dopunjuju
             quranAudio.play().catch(err => console.log("Quran audio play error:", err));
