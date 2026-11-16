@@ -480,10 +480,11 @@
         <div>
             <div class="section-title" data-i18n="sec_3">3. Osnovni ton (Carrier frekvencija)</div>
             <select id="carrier-select">
+                <option value="174" data-i18n="c_174">174 Hz — Niska frekvencija za opuštanje</option>
                 <option value="200" data-i18n="c_200">200 Hz — Topli ton (Preporučeno za BT slušalice)</option>
+                <option value="396" data-i18n="c_396">396 Hz — Otpuštanje tuge, straha i napetosti</option>
                 <option value="432" selected data-i18n="c_432">432 Hz — Prirodni balans i ravnoteža</option>
                 <option value="528" data-i18n="c_528">528 Hz — Solfeggio regeneracija</option>
-                <option value="174" data-i18n="c_174">174 Hz — Niska frekvencija za opuštanje</option>
             </select>
         </div>
 
@@ -509,6 +510,15 @@
                     <small data-i18n="tog_vis_sub">Sigurna Alfa modulacija</small>
                 </span>
                 <input type="checkbox" id="visual-pulse-toggle" checked>
+            </div>
+
+            <!-- NOVI PREKIDAČ: UČENJE KUR'ANA U POZADINI -->
+            <div class="toggle-row" style="border-top: 1px solid var(--border-subtle); margin-top: 8px; padding-top: 10px;">
+                <span>
+                    <span data-i18n="tog_quran">📿 Učenje Kur'ana u pozadini</span>
+                    <small data-i18n="tog_quran_sub">Blaga recitacija preko frekvencije za duboki smiraj</small>
+                </span>
+                <input type="checkbox" id="quran-audio-toggle">
             </div>
         </div>
 
@@ -580,14 +590,16 @@
             w_delta: "Delta (3 Hz)", w_delta_sub: "Binauralni • Gašenje napetosti",
             w_emdr: "EMDR Reset (0.33 Hz)", w_emdr_sub: "Bilateralni L/D • Emotivni blok",
             sec_3: "3. Osnovni ton (Carrier frekvencija)",
+            c_174: "174 Hz — Niska frekvencija za opuštanje",
             c_200: "200 Hz — Topli ton (Preporučeno za BT slušalice)",
+            c_396: "396 Hz — Otpuštanje tuge, straha i napetosti",
             c_432: "432 Hz — Prirodni balans i ravnoteža",
             c_528: "528 Hz — Solfeggio regeneracija",
-            c_174: "174 Hz — Niska frekvencija za opuštanje",
             sec_4: "4. Trajanje sesije",
             d_1: "Brzi prekid", d_3: "Puni reset", d_5: "Duboka obnova",
             tog_audio: "Zvučni šum disanja", tog_audio_sub: "Prati ritam (za rad zatvorenih očiju)",
             tog_vis: "Vizualna pulsacija pozadine", tog_vis_sub: "Sigurna Alfa modulacija",
+            tog_quran: "📿 Učenje Kur'ana u pozadini", tog_quran_sub: "Blaga recitacija preko frekvencije za duboki smiraj",
             btn_start: "POKRENI RESET SESIJU",
             prep_title: "PRIPREMI SE",
             prep_sub: "Gledaj u krug ili zatvori oči i prati zvuk",
@@ -610,7 +622,9 @@
             emdr_sub_hint: "Prati očima krug lijevo-desno i diši u ritmu",
             vagus_title: "2. Živac Vagus i srčani ritam (0.1 Hz)",
             vagus_desc: "Ritmom od 6 ciklusa u minuti aktiviran je parasimpatikus. Usklađeni su rad srca i disanje (HRV), čime je prekinuto lučenje kortizola.",
-            base_title: "3. Zvučna baza"
+            base_title: "3. Zvučna baza",
+            quran_effect_title: "📿 Duhovni dodatak — Učenje Kur'ana",
+            quran_effect_desc: "Smirujuća recitacija u pozadini djelovala je kao sidro za dušu, unoseći mir i stabilnost u limbički sistem."
         },
         en: {
             header_sub: "Audio-Visual Regulation & Biological Reset",
@@ -629,14 +643,16 @@
             w_delta: "Delta (3 Hz)", w_delta_sub: "Binaural • Tension release",
             w_emdr: "EMDR Reset (0.33 Hz)", w_emdr_sub: "Bilateral L/R • Emotional block",
             sec_3: "3. Base Tone (Carrier frequency)",
+            c_174: "174 Hz — Low grounding frequency",
             c_200: "200 Hz — Warm tone (Recommended for BT headphones)",
+            c_396: "396 Hz — Release of grief, fear & tension",
             c_432: "432 Hz — Natural balance & harmony",
             c_528: "528 Hz — Solfeggio regeneration",
-            c_174: "174 Hz — Low grounding frequency",
             sec_4: "4. Session Duration",
             d_1: "Quick break", d_3: "Full reset", d_5: "Deep recovery",
             tog_audio: "Breathing breath-noise guide", tog_audio_sub: "Follows rhythm (for eyes-closed use)",
             tog_vis: "Ambient visual pulsation", tog_vis_sub: "Safe Alpha modulation",
+            tog_quran: "📿 Quran recitation in background", tog_quran_sub: "Soft recitation over frequency for deep inner peace",
             btn_start: "START RESET SESSION",
             prep_title: "GET READY",
             prep_sub: "Focus on the orb or close your eyes and follow the sound",
@@ -659,7 +675,9 @@
             emdr_sub_hint: "Follow the orb left-to-right with your eyes and breathe",
             vagus_title: "2. Vagus Nerve & Heart Rate (0.1 Hz)",
             vagus_desc: "At 6 breaths per minute, your parasympathetic system was activated, synchronizing heart rate and breathing (HRV) to halt cortisol release.",
-            base_title: "3. Sound Base"
+            base_title: "3. Sound Base",
+            quran_effect_title: "📿 Spiritual Element — Quran Recitation",
+            quran_effect_desc: "The soothing recitation in the background acted as an anchor for the soul, bringing peace and stability to the limbic system."
         }
     };
 
@@ -711,6 +729,10 @@
             bs: "Topli osnovni ton od 200 Hz stvara stabilnu zvučnu izolaciju od vanjskih smetnji.",
             en: "The warm 200 Hz base tone creates stable acoustic insulation from external distractions."
         },
+        396: {
+            bs: "Frekvencija od 396 Hz pomaže u otpuštanju tuge, straha i duboko ukorijenjene napetosti.",
+            en: "The 396 Hz frequency assists in releasing grief, fear, and deeply rooted inner tension."
+        },
         432: {
             bs: "Frekvencija od 432 Hz smanjuje mentalnu napetost i ostavlja osjećaj ravnoteže.",
             en: "The 432 Hz frequency reduces mental tension and leaves a sense of natural equilibrium."
@@ -732,11 +754,15 @@
     };
 
     let audioCtx = null;
-    let activeModeEngine = null; // Ekskluzivni kontroler: drži samo Binaural ILI samo EMDR
+    let activeModeEngine = null;
     let masterGain = null;
     let noiseNode = null;
     let noiseFilter = null;
     let noiseGain = null;
+
+    // Kur'an audio elementi
+    let quranAudioElem = null;
+    let quranAudioNode = null;
 
     let isRunning = false;
     let sessionStartTime = 0;
@@ -799,7 +825,6 @@
         btn.classList.add('active');
     }
 
-    // BINAURALNI ENGINE (radi isključivo kada nije EMDR)
     function createBinauralMode(ctx, carrierFreq, beatFreq, destination) {
         const oscLeft = ctx.createOscillator();
         const panLeft = ctx.createStereoPanner();
@@ -830,7 +855,6 @@
         };
     }
 
-    // EMDR BILATERALNI ENGINE (radi isključivo umjesto binauralnog)
     function createEMDRMode(ctx, carrierFreq, panSpeedHz, destination) {
         const carrierOsc = ctx.createOscillator();
         carrierOsc.type = 'sine';
@@ -865,7 +889,6 @@
     }
 
     function initAudioEngine() {
-        // Ako je slučajno ostao aktivan prethodni engine, prvo ga gasimo
         if (activeModeEngine) {
             activeModeEngine.stop();
             activeModeEngine = null;
@@ -881,7 +904,6 @@
         masterGain.gain.exponentialRampToValueAtTime(0.28, audioCtx.currentTime + 1.5);
         masterGain.connect(audioCtx.destination);
 
-        // Ekskluzivno pokretanje: ILI EMDR ILI Binaural
         if (config.wave === 'emdr') {
             activeModeEngine = createEMDRMode(audioCtx, config.carrier, 0.33, masterGain);
         } else {
@@ -917,9 +939,40 @@
             noiseGain.connect(masterGain);
             noiseNode.start();
         }
+
+        // AKO JE UKLJUČEN PREKIDAČ ZA KUR'AN
+        if (document.getElementById('quran-audio-toggle').checked) {
+            quranAudioElem = new Audio();
+            // Provjereni stabilni MP3Quran link (smirujući učač - sura Ar-Rahman / opći smirujući odlomak)
+            quranAudioElem.src = "https://download.quranicaudio.com/quran/mishaari_rashid_al_afaasee/055.mp3";
+            quranAudioElem.crossOrigin = "anonymous";
+            quranAudioElem.loop = true;
+            quranAudioElem.volume = 0.42; // Blaga glasnoća da frekvencija otvori prostor, a glas uđe u glavu
+
+            try {
+                quranAudioNode = audioCtx.createMediaElementSource(quranAudioElem);
+                const quranGain = audioCtx.createGain();
+                quranGain.gain.setValueAtTime(0.45, audioCtx.currentTime); // Fino dozirano da se ne tuče sa tonom
+
+                quranAudioNode.connect(quranGain);
+                quranGain.connect(masterGain);
+                quranAudioElem.play().catch(err => console.log("Audio play blocked or loading:", err));
+            } catch (e) {
+                // Fallback ako CORS ili browser blokira media element source
+                quranAudioElem.play().catch(err => console.log(err));
+            }
+        }
     }
 
     function stopAudioEngine() {
+        if (quranAudioElem) {
+            try {
+                quranAudioElem.pause();
+                quranAudioElem.currentTime = 0;
+            } catch (e) {}
+            quranAudioElem = null;
+        }
+
         if (!audioCtx) return;
         try {
             const now = audioCtx.currentTime;
@@ -951,6 +1004,7 @@
                 'wave': config.wave,
                 'carrier': config.carrier,
                 'duration_sec': config.duration,
+                'quran': document.getElementById('quran-audio-toggle').checked ? 'yes' : 'no',
                 'language': currentLang
             });
         }
@@ -1024,7 +1078,6 @@
 
         const orb = document.getElementById('breath-orb');
         if (config.wave === 'emdr') {
-            // Sinhronizovano lijevo-desno klizanje sa 0.33 Hz LFO-om + blago disanje
             const maxSlide = (document.getElementById('visualizer-box').clientWidth / 2) - 65;
             const panX = Math.sin(2 * Math.PI * 0.33 * elapsedSec) * maxSlide;
             const scale = 0.75 + (breathLevel * 0.25);
@@ -1085,19 +1138,30 @@
         const tDict = i18n[currentLang];
         const waveInfo = waveDetails[config.wave];
         const minutesDone = Math.round(config.duration / 60);
+        const hasQuran = document.getElementById('quran-audio-toggle').checked;
 
         if (currentLang === 'bs') {
             const protocolName = config.protocol === 'coherent'
                 ? "Koherentno disanje (0.1 Hz)"
                 : "Fiziološki uzdah (0.1 Hz)";
             document.getElementById('result-summary-intro').textContent =
-                `Odradio si ${minutesDone} min protokola: ${protocolName} + ${waveInfo.name.bs} na bazi od ${config.carrier} Hz. Živčani sustav je izašao iz stanja stresa.`;
+                `Odradio si ${minutesDone} min protokola: ${protocolName} + ${waveInfo.name.bs} na bazi od ${config.carrier} Hz.${hasQuran ? " Uključeno je i učenje Kur'ana." : ""} Živčani sustav je izašao iz stanja stresa.`;
         } else {
             const protocolName = config.protocol === 'coherent'
                 ? "Coherent Breathing (0.1 Hz)"
                 : "Physiological Sigh (0.1 Hz)";
             document.getElementById('result-summary-intro').textContent =
-                `You completed ${minutesDone} min of: ${protocolName} + ${waveInfo.name.en} on a ${config.carrier} Hz carrier. Your nervous system has shifted out of stress.`;
+                `You completed ${minutesDone} min of: ${protocolName} + ${waveInfo.name.en} on a ${config.carrier} Hz carrier.${hasQuran ? " Quran recitation was included." : ""} Your nervous system has shifted out of stress.`;
+        }
+
+        let quranHtml = '';
+        if (hasQuran) {
+            quranHtml = `
+                <li>
+                    <strong>${tDict.quran_effect_title}</strong>
+                    ${tDict.quran_effect_desc}
+                </li>
+            `;
         }
 
         const list = document.getElementById('result-effects-list');
@@ -1114,6 +1178,7 @@
                 <strong>${tDict.base_title} (${config.carrier} Hz)</strong>
                 ${carrierDetails[config.carrier][currentLang]}
             </li>
+            ${quranHtml}
         `;
     }
 
@@ -1135,7 +1200,7 @@
             }
         } else {
             if (diff > 0) {
-                const pct = Math.round((diff / config.preStress) * 100);
+                const pct = Math.round((diff / config.preShift || diff / config.preStress) * 100);
                 msgEl.textContent = `Great! Your tension dropped from ${config.preStress}/5 to ${postVal}/5 (−${pct}%).`;
             } else if (diff === 0) {
                 msgEl.textContent = `State is stable (${postVal}/5). For a deeper shift, try EMDR Reset or Theta (6 Hz) for 5 minutes.`;
